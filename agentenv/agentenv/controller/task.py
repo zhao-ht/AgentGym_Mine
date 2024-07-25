@@ -1,12 +1,11 @@
 from dataclasses import dataclass
-from typing import Any, Callable, Mapping, Optional, Sequence, TypedDict
+from typing import Any, Callable, Mapping, Optional, Sequence, TypedDict, Union
 
 import torch
+from agentenv.controller import BaseEnvClient
 from torch.nn.parallel import DistributedDataParallel
 from transformers import GenerationConfig, PreTrainedModel, PreTrainedTokenizerBase
 from transformers.generation.utils import GenerateOutput
-
-from agentenv.controller import BaseEnvClient
 
 ConversationMessage = TypedDict(
     "ConversationMessage", {"from": str, "loss": Optional[bool], "value": str}
@@ -38,9 +37,9 @@ class BaseTask:
     env_name: str
 
     def __init__(
-        self,
-        client_args: Mapping[str, Any],
-        n_clients: int = 1,
+            self,
+            client_args: Mapping[str, Any],
+            n_clients: int = 1,
     ) -> None:
         """
         Initializes the Task object.
@@ -55,9 +54,9 @@ class BaseTask:
         self.len = len(self.clients[0])
 
     def _tokenize_conversation_one(
-        self,
-        message: ConversationMessage,
-        tokenizer: PreTrainedTokenizerBase,
+            self,
+            message: ConversationMessage,
+            tokenizer: PreTrainedTokenizerBase,
     ) -> TokenizedConversationOutput:
         """
         This function applied Llama Chat template on the given vicuna-styled conversation message.
@@ -84,9 +83,9 @@ class BaseTask:
         )
 
     def _tokenize_conversation(
-        self,
-        conversation: list[ConversationMessage],
-        tokenizer: PreTrainedTokenizerBase,
+            self,
+            conversation: list[ConversationMessage],
+            tokenizer: PreTrainedTokenizerBase,
     ) -> TokenizedConversationOutput:
         text = ""
         input_ids = []
@@ -107,13 +106,13 @@ class BaseTask:
         )
 
     def _generate_experience_one(
-        self,
-        model: PreTrainedModel,
-        tokenizer: PreTrainedTokenizerBase,
-        client: BaseEnvClient,
-        idx: int,
-        generation_config: Optional[GenerationConfig] = None,
-        max_rounds: Optional[int] = None,
+            self,
+            model: PreTrainedModel,
+            tokenizer: PreTrainedTokenizerBase,
+            client: BaseEnvClient,
+            idx: int,
+            generation_config: Optional[GenerationConfig] = None,
+            max_rounds: Optional[int] = None,
     ) -> ExperienceOutput:
         client.reset(idx)
         reward = 0.0
@@ -150,8 +149,8 @@ class BaseTask:
             conversation_tokenized["action_mask"] += [1] * len(generated_tokens)
 
             generated_text = generated_text[
-                : -len(tokenizer.eos_token)
-            ]  # not endswith eos_token
+                             : -len(tokenizer.eos_token)
+                             ]  # not endswith eos_token
             conversation.append(
                 ConversationMessage(
                     {"from": "gpt", "loss": True, "value": generated_text}
@@ -192,32 +191,32 @@ class BaseTask:
         )
 
     def _generate_experience_batch(
-        self,
-        model: PreTrainedModel,
-        tokenizer: PreTrainedTokenizerBase,
-        idxs: Sequence[int],
-        generation_config: Optional[GenerationConfig] = None,
-        max_rounds: Optional[int] = None,
+            self,
+            model: PreTrainedModel,
+            tokenizer: PreTrainedTokenizerBase,
+            idxs: Sequence[int],
+            generation_config: Optional[GenerationConfig] = None,
+            max_rounds: Optional[int] = None,
     ) -> list[ExperienceOutput]:
         # TODO: "Batch experience generation is not implemented. Generate one by one.",
         client = self.clients[0]
         result = [self._generate_experience_one(
-                    model=model,
-                    tokenizer=tokenizer,
-                    client=client,
-                    idx=idx,
-                    generation_config=generation_config,
-                    max_rounds=max_rounds,
-                ) for idx in idxs]
+            model=model,
+            tokenizer=tokenizer,
+            client=client,
+            idx=idx,
+            generation_config=generation_config,
+            max_rounds=max_rounds,
+        ) for idx in idxs]
         return result
 
     def generate_experience(
-        self,
-        model: PreTrainedModel,
-        tokenizer: PreTrainedTokenizerBase,
-        idxs: Sequence[int] | int,
-        generation_config: Optional[GenerationConfig] = None,
-        max_rounds: Optional[int] = None,
+            self,
+            model: PreTrainedModel,
+            tokenizer: PreTrainedTokenizerBase,
+            idxs: Union[Sequence[int], int],
+            generation_config: Optional[GenerationConfig] = None,
+            max_rounds: Optional[int] = None,
     ) -> list[ExperienceOutput]:
         if isinstance(idxs, int):
             idxs = [idxs]

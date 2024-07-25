@@ -1,4 +1,5 @@
 import os
+
 from LLM_RL.environment import Text
 from llm_rl_scripts.wordle.env.env import ReformatWordleEnvironment, WordleEnvironment
 from llm_rl_scripts.wordle.env.game import Vocabulary
@@ -113,3 +114,5 @@ class Lmrlgym_WordleEnv:
 
 
 wordle_server = Lmrlgym_WordleEnv()
+# wordle_server.create()
+# wordle_server.reset(0,0)

@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-from typing import Optional, Sequence, TypedDict
+from typing import Optional, Sequence, TypedDict, Union
 
 import numpy as np
-
 from agentenv.controller.agent import Agent
 from agentenv.controller.task import BaseTask, ExperienceOutput, GenerationConfig
 
@@ -24,10 +23,10 @@ class BaseAgentEnvController:
         self.tasks = tasks
 
     def generate_experience(
-        self,
-        idxs: Sequence[int] | Sequence[Sequence[int]] | None = None,
-        generation_config: Optional[GenerationConfig] = None,
-        max_rounds: Optional[int] = None,
+            self,
+            idxs: Union[Sequence[int], Sequence[Sequence[int]], None] = None,
+            generation_config: Optional[GenerationConfig] = None,
+            max_rounds: Optional[int] = None,
     ) -> list[ExperienceOutput]:
         experience = []
         if isinstance(idxs[0], int):
@@ -55,10 +54,10 @@ class BaseAgentEnvController:
 
 class Evaluator(BaseAgentEnvController):
     def eval(
-        self,
-        generation_config: Optional[GenerationConfig] = None,
-        max_rounds: Optional[int] = None,
-        idxs: Sequence[int] | Sequence[Sequence[int]] | None = None,
+            self,
+            generation_config: Optional[GenerationConfig] = None,
+            max_rounds: Optional[int] = None,
+            idxs: Union[Sequence[int], Sequence[Sequence[int]], None] = None,
     ) -> EvaluationOutput:
         exps = self.generate_experience(
             idxs=idxs if idxs is not None else [list(range(len(task.clients[0]))) for task in self.tasks],
@@ -79,10 +78,10 @@ class BaseTrainer(BaseAgentEnvController):
         pass
 
     def eval(
-        self,
-        generation_config: Optional[GenerationConfig] = None,
-        max_rounds: Optional[int] = None,
-        idxs: Sequence[int] | Sequence[Sequence[int]] = None,
+            self,
+            generation_config: Optional[GenerationConfig] = None,
+            max_rounds: Optional[int] = None,
+            idxs: Union[Sequence[int], Sequence[Sequence[int]]] = None,
     ) -> EvaluationOutput:
         exps = self.generate_experience(
             idxs=idxs,

@@ -73,3 +73,5 @@ class TextCraft_Wrapper:
             raise NameError(f"The task with environment {id} has been deleted.")
 
 server = TextCraft_Wrapper()
+# server.create()
+# server.reset(0,0)

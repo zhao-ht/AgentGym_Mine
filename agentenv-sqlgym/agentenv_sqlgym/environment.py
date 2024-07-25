@@ -38,6 +38,7 @@ class SqlGymEnvServer:
     def create(self) -> int:
         random.seed(time.time())
         idx = random.randint(0, 489576)
+        # idx=0
         print(f"-------Env {idx} created--------")
         if len(self.env) == self.sz:
             self.now = self.now + 1
@@ -108,3 +109,5 @@ class SqlGymEnvServer:
 
 
 sqlgym_env_server = SqlGymEnvServer()
+# sqlgym_env_server.create()
+# sqlgym_env_server.reset(0,9429)

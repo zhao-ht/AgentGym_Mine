@@ -1,7 +1,8 @@
 from typing import Any, Mapping
+
 import requests
-from requests.exceptions import RequestException
 from agentenv.controller import BaseEnvClient, BaseTask, ConversationMessage, StepOutput
+from requests.exceptions import RequestException
 
 
 class BabyAIEnvClient(BaseEnvClient):
@@ -23,7 +24,7 @@ class BabyAIEnvClient(BaseEnvClient):
     )
 
     def __init__(
-        self, env_server_base: str, data_len: int, *args, timeout: int = 300, **kwargs
+            self, env_server_base: str, data_len: int, *args, timeout: int = 300, **kwargs
     ):
         super().__init__(*args, **kwargs)
         self.env_server_base = env_server_base
@@ -98,6 +99,6 @@ class BabyAITask(BaseTask):
     env_name = "BabyAI"
 
     def __init__(
-        self, client_args: Mapping[str, Any], *args, n_clients: int = 1, **kwargs
+            self, client_args: Mapping[str, Any], *args, n_clients: int = 1, **kwargs
     ) -> None:
         super().__init__(client_args, n_clients, *args, **kwargs)

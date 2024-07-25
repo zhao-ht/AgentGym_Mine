@@ -1,9 +1,8 @@
-from typing import Any, Mapping, Dict
+from typing import Any, Mapping, Dict, Union
 
 import requests
-from requests.exceptions import RequestException
-
 from agentenv.controller import BaseEnvClient, BaseTask, ConversationMessage, StepOutput
+from requests.exceptions import RequestException
 
 
 class WebarenaEnvClient(BaseEnvClient):
@@ -19,7 +18,7 @@ class WebarenaEnvClient(BaseEnvClient):
     )
 
     def __init__(
-        self, env_server_base: str, data_len: int, *args, timeout: int = 300, **kwargs
+            self, env_server_base: str, data_len: int, *args, timeout: int = 300, **kwargs
     ):
         super().__init__(*args, **kwargs)
         self.env_server_base = env_server_base
@@ -79,10 +78,10 @@ class WebarenaTask(BaseTask):
     env_name = "Webarena"
 
     def __init__(
-        self,
-        client_args: Mapping[str, Any] | Mapping[str, Any],
-        n_clients: int,
-        *args,
-        **kwargs,
+            self,
+            client_args: Union[Mapping[str, Any], Mapping[str, Any]],
+            n_clients: int,
+            *args,
+            **kwargs,
     ):
         super().__init__(client_args, n_clients, *args, **kwargs)

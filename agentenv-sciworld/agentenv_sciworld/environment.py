@@ -25,6 +25,7 @@ class SciWorldEnv:
                         for i in range(self.env[idx].getMaxVariations(value))
                     ]
             print(f"-------Env {idx} created--------")
+            print("{} games established".format(len(self.games)))
             return {"id": idx}
         except Exception as e:
             return {"error": str(e)}
@@ -110,3 +111,6 @@ class SciWorldEnv:
 
 
 server = SciWorldEnv()
+# server.create()
+# print(server.reset(0,4638))
+# print(server.reset(0,4639))
